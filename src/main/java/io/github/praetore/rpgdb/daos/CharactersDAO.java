@@ -14,8 +14,12 @@ public class CharactersDAO extends DataAccessObject {
 
     public void createNewCharacter(CharactersEntity character) {
         EntityTransaction transaction = getEntityManager().getTransaction();
-        transaction.begin();
-        getEntityManager().persist(character);
-        transaction.commit();
+        try {
+            transaction.begin();
+            getEntityManager().persist(character);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        }
     }
 }

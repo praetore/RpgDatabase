@@ -15,16 +15,24 @@ public class UsersDAO extends DataAccessObject {
 
     public void createNewUser(UsersEntity usersEntity) {
         EntityTransaction transaction = getEntityManager().getTransaction();
-        transaction.begin();
-        getEntityManager().persist(usersEntity);
-        transaction.commit();
+        try {
+            transaction.begin();
+            getEntityManager().persist(usersEntity);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        }
     }
 
     public void addCharacterToUser(UsersEntity usersEntity, CharactersEntity charactersEntity) {
         EntityTransaction transaction = getEntityManager().getTransaction();
-        transaction.begin();
-        usersEntity.getCharacters().add(charactersEntity);
-        transaction.commit();
+        try {
+            transaction.begin();
+            usersEntity.getCharacters().add(charactersEntity);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        }
     }
 
     public int getCurrentCharacterAmount(String userName) {

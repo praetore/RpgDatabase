@@ -35,6 +35,7 @@ public class TestCharacterEntityPersistence {
 
         dao.createNewCharacter(entity);
         CharactersEntity character = dao.findCharacter(NAME);
+
         String name = character.getName();
         assertEquals(name, NAME);
         String clazz = character.getClazz();

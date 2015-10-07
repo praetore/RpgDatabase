@@ -15,8 +15,12 @@ public class ServersDAO extends DataAccessObject {
 
     public void createNewServer(ServersEntity serversEntity) {
         EntityTransaction transaction = getEntityManager().getTransaction();
-        transaction.begin();
-        getEntityManager().persist(serversEntity);
-        transaction.commit();
+        try {
+            transaction.begin();
+            getEntityManager().persist(serversEntity);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        }
     }
 }

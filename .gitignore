@@ -71,5 +71,4 @@ crashlytics-build.properties
 hs_err_pid*
 
 # H2 databases
-*.mv.db
-*.trace.db
+*.db
