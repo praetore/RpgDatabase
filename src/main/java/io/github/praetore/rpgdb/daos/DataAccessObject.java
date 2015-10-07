@@ -1,11 +1,11 @@
-package io.github.praetore.rpgdb.beans;
+package io.github.praetore.rpgdb.daos;
 
 import javax.persistence.*;
 
 /**
  * Created by darryl on 7-10-15.
  */
-abstract public class ServiceBean {
+abstract public class DataAccessObject {
     private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
 
@@ -19,7 +19,7 @@ abstract public class ServiceBean {
 
     public void setEntityManagerFactory(String persistenceUnit) {
         this.entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnit);
-        this.entityManager = getEntityManagerFactory().createEntityManager();
+        this.entityManager = entityManagerFactory.createEntityManager();
     }
 
     public void close() {
