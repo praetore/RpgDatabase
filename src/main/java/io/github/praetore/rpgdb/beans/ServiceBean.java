@@ -6,10 +6,7 @@ import javax.persistence.*;
  * Created by darryl on 7-10-15.
  */
 abstract public class ServiceBean {
-    @PersistenceUnit(unitName = "rpgUnit")
     private EntityManagerFactory entityManagerFactory;
-
-    @PersistenceContext(unitName = "rpgUnit")
     private EntityManager entityManager;
 
     public EntityManager getEntityManager() {
