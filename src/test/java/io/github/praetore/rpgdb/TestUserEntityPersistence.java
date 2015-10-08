@@ -2,9 +2,12 @@ package io.github.praetore.rpgdb;
 
 import io.github.praetore.rpgdb.daos.UsersDAO;
 import io.github.praetore.rpgdb.models.UsersEntity;
+import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.Properties;
 
 import static org.junit.Assert.*;
 
@@ -12,8 +15,9 @@ import static org.junit.Assert.*;
  * Created by darryl on 2-10-15.
  */
 public class TestUserEntityPersistence {
-    private static UsersDAO dao;
+    private static UsersDAO usersDAO;
     private static final String PERSISTENCE_UNIT_NAME = "rpgUnit";
+
     private static final String USERNAME = "Praetore";
     private static final int BALANCE = 100;
     private static final String FIRSTNAME = "Darryl";
@@ -26,12 +30,15 @@ public class TestUserEntityPersistence {
 
     @BeforeClass
     public static void initFixture() {
-        dao = new UsersDAO();
-        dao.setEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        Properties properties = new Properties();
+        properties.setProperty(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML,
+                "META-INF/persistence-test.xml");
+        usersDAO = new UsersDAO();
+        usersDAO.setEntityManagerFactory(PERSISTENCE_UNIT_NAME, properties);
     }
 
     @Test
-    public void testUserEntityPersistence() {
+    public void testUserCreation() {
         UsersEntity entity = new UsersEntity();
         entity.setUserName(USERNAME);
         entity.setBalance(BALANCE);
@@ -43,8 +50,8 @@ public class TestUserEntityPersistence {
         entity.setPassword(PASSWORD);
         entity.setBanned(ISBANNED);
 
-        dao.createNewUser(entity);
-        UsersEntity user = dao.findUser(USERNAME);
+        usersDAO.createNewUser(entity);
+        UsersEntity user = usersDAO.findUser(USERNAME);
         assertNotNull(user);
 
         String userName = user.getUserName();
@@ -80,17 +87,17 @@ public class TestUserEntityPersistence {
         entity.setPassword(PASSWORD);
         entity.setBanned(ISBANNED);
 
-        dao.createNewUser(entity);
-        UsersEntity user = dao.findUser(USERNAME);
+        usersDAO.createNewUser(entity);
+        UsersEntity user = usersDAO.findUser(USERNAME);
         assertNotNull(user);
 
-        dao.removeUser(USERNAME);
-        user = dao.findUser(USERNAME);
+        usersDAO.removeUser(USERNAME);
+        user = usersDAO.findUser(USERNAME);
         assertNull(user);
     }
 
     @AfterClass
     public static void destroyFixture() {
-        dao.close();
+        usersDAO.close();
     }
 }

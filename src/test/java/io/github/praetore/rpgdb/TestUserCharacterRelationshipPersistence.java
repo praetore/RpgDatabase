@@ -3,7 +3,10 @@ package io.github.praetore.rpgdb;
 import io.github.praetore.rpgdb.daos.UsersDAO;
 import io.github.praetore.rpgdb.models.CharactersEntity;
 import io.github.praetore.rpgdb.models.UsersEntity;
+import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.junit.*;
+
+import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -37,8 +40,11 @@ public class TestUserCharacterRelationshipPersistence {
 
     @BeforeClass
     public static void initFixture() {
+        Properties properties = new Properties();
+        properties.setProperty(PersistenceUnitProperties.ECLIPSELINK_PERSISTENCE_XML,
+                "META-INF/persistence-test.xml");
         usersDAO = new UsersDAO();
-        usersDAO.setEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        usersDAO.setEntityManagerFactory(PERSISTENCE_UNIT_NAME, properties);
     }
 
     @Test
