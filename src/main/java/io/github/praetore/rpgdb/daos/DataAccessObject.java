@@ -13,10 +13,6 @@ abstract public class DataAccessObject {
         return entityManager;
     }
 
-    public EntityManagerFactory getEntityManagerFactory() {
-        return entityManagerFactory;
-    }
-
     public void setEntityManagerFactory(String persistenceUnit) {
         this.entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnit);
         this.entityManager = entityManagerFactory.createEntityManager();

@@ -1,6 +1,5 @@
 package io.github.praetore.rpgdb;
 
-import io.github.praetore.rpgdb.daos.CharactersDAO;
 import io.github.praetore.rpgdb.daos.UsersDAO;
 import io.github.praetore.rpgdb.models.CharactersEntity;
 import io.github.praetore.rpgdb.models.UsersEntity;
@@ -13,7 +12,6 @@ import static org.junit.Assert.assertNotNull;
  * Created by darryl on 7-10-15.
  */
 public class TestUserCharacterRelationshipPersistence {
-    private static CharactersDAO charactersDAO;
     private static UsersDAO usersDAO;
     private static final String PERSISTENCE_UNIT_NAME = "rpgUnit";
 
@@ -39,8 +37,6 @@ public class TestUserCharacterRelationshipPersistence {
 
     @BeforeClass
     public static void initFixture() {
-        charactersDAO = new CharactersDAO();
-        charactersDAO.setEntityManagerFactory(PERSISTENCE_UNIT_NAME);
         usersDAO = new UsersDAO();
         usersDAO.setEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     }
@@ -107,7 +103,6 @@ public class TestUserCharacterRelationshipPersistence {
 
     @AfterClass
     public static void destroyFixture() {
-        charactersDAO.close();
         usersDAO.close();
     }
 }

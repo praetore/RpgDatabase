@@ -25,13 +25,13 @@ public class TestUserEntityPersistence {
     private static final boolean ISBANNED = false;
 
     @BeforeClass
-    public static void initFixture() throws Exception {
+    public static void initFixture() {
         dao = new UsersDAO();
         dao.setEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     }
 
     @Test
-    public void testUserEntityPersistence() throws Exception {
+    public void testUserEntityPersistence() {
         UsersEntity entity = new UsersEntity();
         entity.setUserName(USERNAME);
         entity.setBalance(BALANCE);
@@ -45,13 +45,14 @@ public class TestUserEntityPersistence {
 
         dao.createNewUser(entity);
         UsersEntity user = dao.findUser(USERNAME);
+        assertNotNull(user);
 
         String userName = user.getUserName();
         assertEquals(userName, USERNAME);
         int balance = user.getBalance();
         assertEquals(balance, BALANCE);
         String firstName = user.getFirstName();
-        assertEquals(firstName, "Darryl");
+        assertEquals(firstName, FIRSTNAME);
         String lastName = user.getLastName();
         assertEquals(lastName, LASTNAME);
         String iban = user.getIban();
@@ -63,7 +64,7 @@ public class TestUserEntityPersistence {
         String password = user.getPassword();
         assertEquals(password, PASSWORD);
         boolean banned = user.isBanned();
-        assertFalse(banned);
+        assertEquals(ISBANNED, banned);
     }
 
     @Test
@@ -80,16 +81,16 @@ public class TestUserEntityPersistence {
         entity.setBanned(ISBANNED);
 
         dao.createNewUser(entity);
-
         UsersEntity user = dao.findUser(USERNAME);
         assertNotNull(user);
+
         dao.removeUser(USERNAME);
         user = dao.findUser(USERNAME);
         assertNull(user);
     }
 
     @AfterClass
-    public static void destroyFixture() throws Exception {
+    public static void destroyFixture() {
         dao.close();
     }
 }

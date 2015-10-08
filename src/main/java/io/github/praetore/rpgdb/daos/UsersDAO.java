@@ -24,6 +24,11 @@ public class UsersDAO extends DataAccessObject {
         }
     }
 
+    public void loginUser(String userName, String password) {
+        UsersEntity user = findUser(userName);
+
+    }
+
     public CharactersEntity findCharacterFromUser(UsersEntity usersEntity, String characterName) {
         for (CharactersEntity charactersEntity : usersEntity.getCharacters()) {
             if (charactersEntity.getName().equals(characterName)) {
