@@ -24,6 +24,15 @@ public class UsersDAO extends DataAccessObject {
         }
     }
 
+    public CharactersEntity findCharacterFromUser(UsersEntity usersEntity, String characterName) {
+        for (CharactersEntity charactersEntity : usersEntity.getCharacters()) {
+            if (charactersEntity.getName().equals(characterName)) {
+                return charactersEntity;
+            }
+        }
+        return null;
+    }
+
     public void addCharacterToUser(UsersEntity usersEntity, CharactersEntity charactersEntity) {
         EntityTransaction transaction = getEntityManager().getTransaction();
         try {
@@ -35,7 +44,34 @@ public class UsersDAO extends DataAccessObject {
         }
     }
 
+    public void removeCharacterFromUser(UsersEntity usersEntity, CharactersEntity character) {
+        EntityTransaction transaction = getEntityManager().getTransaction();
+        try {
+            transaction.begin();
+            usersEntity.getCharacters().remove(character);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        }
+    }
+
     public int getCurrentCharacterAmount(String userName) {
         return findUser(userName).getCharacters().size();
+    }
+
+    public void removeUser(UsersEntity user) {
+        EntityTransaction transaction = getEntityManager().getTransaction();
+        try {
+            transaction.begin();
+            getEntityManager().remove(user);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+        }
+    }
+
+    public void removeUser(String userName) {
+        UsersEntity user = findUser(userName);
+        removeUser(user);
     }
 }

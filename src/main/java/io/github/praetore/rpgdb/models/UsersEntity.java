@@ -2,7 +2,7 @@ package io.github.praetore.rpgdb.models;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by darryl on 7-10-15.
@@ -20,10 +20,10 @@ public class UsersEntity {
     private short monthsPayed;
     private String password;
     private boolean banned;
-    private Collection<CharactersEntity> characters;
+    private List<CharactersEntity> characters;
 
     @Id
-    @Column(name = "user_name", nullable = false, insertable = true, updatable = true, length = 2147483647)
+    @Column(name = "user_name", nullable = false, insertable = true, updatable = true, length = 10485760)
     public String getUserName() {
         return userName;
     }
@@ -32,15 +32,15 @@ public class UsersEntity {
         this.userName = userName;
     }
 
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.ALL)
     @JoinTable(name = "owns",
-            joinColumns = @JoinColumn(name = "user_name_users"),
-            inverseJoinColumns=@JoinColumn(name="name_characters"))
-    public Collection<CharactersEntity> getCharacters() {
+            joinColumns = @JoinColumn(name="user_name_users"),
+            inverseJoinColumns = @JoinColumn(name = "name_characters"))
+    public List<CharactersEntity> getCharacters() {
         return characters;
     }
 
-    public void setCharacters(Collection<CharactersEntity> characters) {
+    public void setCharacters(List<CharactersEntity> characters) {
         this.characters = characters;
     }
 
@@ -55,7 +55,7 @@ public class UsersEntity {
     }
 
     @Basic
-    @Column(name = "first_name", nullable = false, insertable = true, updatable = true, length = 2147483647)
+    @Column(name = "first_name", nullable = false, insertable = true, updatable = true, length = 10485760)
     public String getFirstName() {
         return firstName;
     }
@@ -65,7 +65,7 @@ public class UsersEntity {
     }
 
     @Basic
-    @Column(name = "last_name", nullable = false, insertable = true, updatable = true, length = 2147483647)
+    @Column(name = "last_name", nullable = false, insertable = true, updatable = true, length = 10485760)
     public String getLastName() {
         return lastName;
     }
@@ -75,7 +75,7 @@ public class UsersEntity {
     }
 
     @Basic
-    @Column(name = "iban", nullable = true, insertable = true, updatable = true, length = 2147483647)
+    @Column(name = "iban", nullable = true, insertable = true, updatable = true, length = 10485760)
     public String getIban() {
         return iban;
     }
@@ -115,7 +115,7 @@ public class UsersEntity {
     }
 
     @Basic
-    @Column(name = "password", nullable = false, insertable = true, updatable = true, length = 2147483647)
+    @Column(name = "password", nullable = false, insertable = true, updatable = true, length = 10485760)
     public String getPassword() {
         return password;
     }

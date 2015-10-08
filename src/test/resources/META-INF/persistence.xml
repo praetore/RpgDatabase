@@ -7,7 +7,7 @@
         <class>io.github.praetore.rpgdb.models.ServersEntity</class>
         <class>io.github.praetore.rpgdb.models.UsersEntity</class>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:./rpgdb"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:./rpgdb;MODE=PostgreSQL"/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.user" value=""/>
             <property name="javax.persistence.jdbc.password" value=""/>

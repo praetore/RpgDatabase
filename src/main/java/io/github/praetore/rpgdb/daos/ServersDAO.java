@@ -1,7 +1,6 @@
 package io.github.praetore.rpgdb.daos;
 
 import io.github.praetore.rpgdb.models.ServersEntity;
-import io.github.praetore.rpgdb.models.UsersEntity;
 
 import javax.persistence.EntityTransaction;
 

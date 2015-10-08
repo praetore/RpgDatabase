@@ -4,11 +4,10 @@ import io.github.praetore.rpgdb.daos.CharactersDAO;
 import io.github.praetore.rpgdb.daos.UsersDAO;
 import io.github.praetore.rpgdb.models.CharactersEntity;
 import io.github.praetore.rpgdb.models.UsersEntity;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by darryl on 7-10-15.
@@ -17,10 +16,16 @@ public class TestUserCharacterRelationshipPersistence {
     private static CharactersDAO charactersDAO;
     private static UsersDAO usersDAO;
     private static final String PERSISTENCE_UNIT_NAME = "rpgUnit";
+
     private static final String NAME = "Ulamog";
     private static final String RACE = "Warhawk";
     private static final String CLASS = "Knight";
     private static final int LEVEL = 1;
+
+    private static final String NAME_2 = "Dedelore";
+    private static final String RACE_2 = "Troll";
+    private static final String CLASS_2 = "Rogue";
+    private static final int LEVEL_2 = 5;
 
     private static final String USERNAME = "Praetore";
     private static final int BALANCE = 100;
@@ -41,15 +46,18 @@ public class TestUserCharacterRelationshipPersistence {
     }
 
     @Test
-    public void testRelationship() {
-        CharactersEntity charactersEntity = new CharactersEntity();
-        charactersEntity.setName(NAME);
-        charactersEntity.setClazz(CLASS);
-        charactersEntity.setLevel(LEVEL);
-        charactersEntity.setRace(RACE);
+    public void testCreateRelationship() {
+        CharactersEntity character = new CharactersEntity();
+        character.setName(NAME);
+        character.setClazz(CLASS);
+        character.setLevel(LEVEL);
+        character.setRace(RACE);
 
-        charactersDAO.createNewCharacter(charactersEntity);
-        CharactersEntity character = charactersDAO.findCharacter(NAME);
+        CharactersEntity character2 = new CharactersEntity();
+        character2.setName(NAME_2);
+        character2.setClazz(CLASS_2);
+        character2.setLevel(LEVEL_2);
+        character2.setRace(RACE_2);
 
         UsersEntity usersEntity = new UsersEntity();
         usersEntity.setUserName(USERNAME);
@@ -64,9 +72,37 @@ public class TestUserCharacterRelationshipPersistence {
 
         usersDAO.createNewUser(usersEntity);
         UsersEntity user = usersDAO.findUser(USERNAME);
+
         usersDAO.addCharacterToUser(user, character);
+
         int amount = usersDAO.getCurrentCharacterAmount(USERNAME);
-        assertEquals(amount, 1);
+        assertEquals(1, amount);
+        CharactersEntity charactersEntity = usersDAO.findCharacterFromUser(user, NAME);
+        assertNotNull(charactersEntity);
+
+        usersDAO.addCharacterToUser(user, character2);
+        amount = usersDAO.getCurrentCharacterAmount(USERNAME);
+        assertEquals(2, amount);
+        CharactersEntity charactersEntity2 = usersDAO.findCharacterFromUser(user, NAME_2);
+        assertNotNull(charactersEntity2);
+    }
+
+    @Test
+    public void TestRemoveRelationship() {
+        UsersEntity user = usersDAO.findUser(USERNAME);
+        assertNotNull(user);
+        CharactersEntity character = usersDAO.findCharacterFromUser(user, NAME);
+        assertNotNull(character);
+        CharactersEntity character2 = usersDAO.findCharacterFromUser(user, NAME_2);
+        assertNotNull(character2);
+
+        usersDAO.removeCharacterFromUser(user, character);
+        int amount = usersDAO.getCurrentCharacterAmount(USERNAME);
+        assertEquals(1, amount);
+
+        usersDAO.removeCharacterFromUser(user, character2);
+        amount = usersDAO.getCurrentCharacterAmount(USERNAME);
+        assertEquals(0, amount);
     }
 
     @AfterClass

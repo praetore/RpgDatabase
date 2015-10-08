@@ -15,7 +15,7 @@ public class ServersEntity {
     private short connectedUsers;
 
     @Id
-    @Column(name = "address", nullable = false, insertable = true, updatable = true, length = 2147483647)
+    @Column(name = "address", nullable = false, insertable = true, updatable = true, length = 10485760)
     public String getAddress() {
         return address;
     }
@@ -25,7 +25,7 @@ public class ServersEntity {
     }
 
     @Basic
-    @Column(name = "name", nullable = false, insertable = true, updatable = true, length = 2147483647)
+    @Column(name = "name", nullable = false, insertable = true, updatable = true, length = 10485760)
     public String getName() {
         return name;
     }
@@ -35,7 +35,7 @@ public class ServersEntity {
     }
 
     @Basic
-    @Column(name = "location", nullable = false, insertable = true, updatable = true, length = 2147483647)
+    @Column(name = "location", nullable = false, insertable = true, updatable = true, length = 10485760)
     public String getLocation() {
         return location;
     }

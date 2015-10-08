@@ -6,8 +6,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 /**
  * Created by darryl on 2-10-15.
@@ -65,6 +64,28 @@ public class TestUserEntityPersistence {
         assertEquals(password, PASSWORD);
         boolean banned = user.isBanned();
         assertFalse(banned);
+    }
+
+    @Test
+    public void TestUserRemoval() {
+        UsersEntity entity = new UsersEntity();
+        entity.setUserName(USERNAME);
+        entity.setBalance(BALANCE);
+        entity.setFirstName(FIRSTNAME);
+        entity.setLastName(LASTNAME);
+        entity.setIban(IBAN);
+        entity.setCharacterSlots(CHARACTERSLOTS);
+        entity.setMonthsPayed(MONTHSPAYED);
+        entity.setPassword(PASSWORD);
+        entity.setBanned(ISBANNED);
+
+        dao.createNewUser(entity);
+
+        UsersEntity user = dao.findUser(USERNAME);
+        assertNotNull(user);
+        dao.removeUser(USERNAME);
+        user = dao.findUser(USERNAME);
+        assertNull(user);
     }
 
     @AfterClass

@@ -14,7 +14,7 @@ public class CharactersEntity {
     private int level;
 
     @Id
-    @Column(name = "name", nullable = false, insertable = true, updatable = true, length = 2147483647)
+    @Column(name = "name", nullable = false, insertable = true, updatable = true, length = 10485760)
     public String getName() {
         return name;
     }
@@ -24,7 +24,7 @@ public class CharactersEntity {
     }
 
     @Basic
-    @Column(name = "class", nullable = false, insertable = true, updatable = true, length = 2147483647)
+    @Column(name = "class", nullable = false, insertable = true, updatable = true, length = 10485760)
     public String getClazz() {
         return clazz;
     }
@@ -34,7 +34,7 @@ public class CharactersEntity {
     }
 
     @Basic
-    @Column(name = "race", nullable = false, insertable = true, updatable = true, length = 2147483647)
+    @Column(name = "race", nullable = false, insertable = true, updatable = true, length = 10485760)
     public String getRace() {
         return race;
     }
