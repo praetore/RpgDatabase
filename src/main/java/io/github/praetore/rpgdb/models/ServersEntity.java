@@ -1,6 +1,7 @@
 package io.github.praetore.rpgdb.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by darryl on 7-10-15.
@@ -13,6 +14,7 @@ public class ServersEntity {
     private String location;
     private short maxUsers;
     private short connectedUsers;
+    private List<UsersEntity> usersEntities;
 
     @Id
     @Column(name = "address", nullable = false, insertable = true, updatable = true, length = 10485760)
@@ -22,6 +24,18 @@ public class ServersEntity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name = "stores",
+            joinColumns = @JoinColumn(name="address_servers"),
+            inverseJoinColumns = @JoinColumn(name = "user_name_users"))
+    public List<UsersEntity> getUsersEntities() {
+        return usersEntities;
+    }
+
+    public void setUsersEntities(List<UsersEntity> usersEntities) {
+        this.usersEntities = usersEntities;
     }
 
     @Basic

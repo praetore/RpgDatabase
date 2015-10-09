@@ -20,7 +20,7 @@ abstract public class DataAccessObject {
         } else {
             this.entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnit, properties);
         }
-        this.entityManager = entityManagerFactory.createEntityManager();
+        this.entityManager = this.entityManagerFactory.createEntityManager();
     }
 
     public void setEntityManagerFactory(String persistenceUnit) {
