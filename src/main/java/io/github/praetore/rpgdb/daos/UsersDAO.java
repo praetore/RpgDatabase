@@ -71,13 +71,13 @@ public class UsersDAO extends DataAccessObject {
     public void addCharacterToUser(UsersEntity usersEntity, CharactersEntity charactersEntity) {
         String userName = usersEntity.getUserName();
         Boolean authorized = isLoggedIn(userName);
-        boolean canAddCharacter = getAvailableCharacterSlots(userName) < getCurrentCharacterAmount(userName);
+        boolean canAddCharacter = getAvailableCharacterSlots(userName) > 0;
         if (authorized && canAddCharacter) {
             EntityTransaction transaction = getEntityManager().getTransaction();
             try {
                 transaction.begin();
                 usersEntity.getCharacters().add(charactersEntity);
-                usersEntity.setCharacterSlots((short) (usersEntity.getCharacterSlots() + 1));
+                usersEntity.setCharacterSlots((short) (usersEntity.getCharacterSlots() - 1));
                 transaction.commit();
             } catch (Exception e) {
                 transaction.rollback();
@@ -105,7 +105,7 @@ public class UsersDAO extends DataAccessObject {
         if (authorized) {
             return findUser(username).getCharacterSlots();
         }
-        return -1;
+        return 0;
     }
 
     public int getCurrentCharacterAmount(String userName) {
@@ -113,7 +113,7 @@ public class UsersDAO extends DataAccessObject {
         if (authorized) {
             return findUser(userName).getCharacters().size();
         }
-        return -1;
+        return 0;
     }
 
     public void removeUser(UsersEntity user) {

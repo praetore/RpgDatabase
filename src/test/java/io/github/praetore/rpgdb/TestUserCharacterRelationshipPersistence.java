@@ -10,6 +10,7 @@ import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by darryl on 7-10-15.
@@ -19,8 +20,8 @@ public class TestUserCharacterRelationshipPersistence {
     private static final String PERSISTENCE_UNIT_NAME = "rpgUnit";
 
     private static final String NAME = "Ulamog";
-    private static final String RACE = "Warhawk";
-    private static final String CLASS = "Knight";
+    private static final String RACE = "Orc";
+    private static final String CLASS = "Warrior";
     private static final int LEVEL = 1;
 
     private static final String NAME_2 = "Dedelore";
@@ -28,12 +29,18 @@ public class TestUserCharacterRelationshipPersistence {
     private static final String CLASS_2 = "Rogue";
     private static final int LEVEL_2 = 5;
 
+    private static final String NAME_3 = "Blippy";
+    private static final String RACE_3 = "Elf";
+    private static final String CLASS_3 = "Healer";
+    private static final int LEVEL_3 = 7;
+
     private static final String USERNAME = "Praetore";
+    private static final String USERNAME2 = "Emperor";
     private static final int BALANCE = 100;
     private static final String FIRSTNAME = "Darryl";
     private static final String LASTNAME = "Amatsetam";
     private static final String IBAN = "123456789";
-    private static final short CHARACTERSLOTS = (short) 1;
+    private static final short CHARACTERSLOTS = (short) 2;
     private static final short MONTHSPAYED = (short) 0;
     private static final String PASSWORD = "verysecret";
     private static final boolean ISBANNED = false;
@@ -74,36 +81,79 @@ public class TestUserCharacterRelationshipPersistence {
 
         usersDAO.createNewUser(usersEntity);
         UsersEntity user = usersDAO.findUser(USERNAME);
+        assertNotNull(user);
+
+        usersDAO.loginUser(USERNAME, PASSWORD);
+        boolean loggedIn = usersDAO.isLoggedIn(USERNAME);
+        assertTrue(loggedIn);
+
+        int amount = usersDAO.getCurrentCharacterAmount(USERNAME);
+        assertEquals(0, amount);
+
+        short slotsRemaining = user.getCharacterSlots();
+        assertEquals(2, slotsRemaining);
 
         usersDAO.addCharacterToUser(user, character);
 
-        int amount = usersDAO.getCurrentCharacterAmount(USERNAME);
-        assertEquals(1, amount);
         CharactersEntity charactersEntity = usersDAO.findCharacterFromUser(user, NAME);
         assertNotNull(charactersEntity);
 
-        usersDAO.addCharacterToUser(user, character2);
+        slotsRemaining = user.getCharacterSlots();
+        assertEquals(1, slotsRemaining);
+
         amount = usersDAO.getCurrentCharacterAmount(USERNAME);
-        assertEquals(2, amount);
+        assertEquals(1, amount);
+
+        usersDAO.addCharacterToUser(user, character2);
+
         CharactersEntity charactersEntity2 = usersDAO.findCharacterFromUser(user, NAME_2);
         assertNotNull(charactersEntity2);
+
+        amount = usersDAO.getCurrentCharacterAmount(USERNAME);
+        assertEquals(2, amount);
+
+        slotsRemaining = user.getCharacterSlots();
+        assertEquals(0, slotsRemaining);
     }
 
     @Test
     public void TestRemoveRelationship() {
-        UsersEntity user = usersDAO.findUser(USERNAME);
-        assertNotNull(user);
-        CharactersEntity character = usersDAO.findCharacterFromUser(user, NAME);
-        assertNotNull(character);
-        CharactersEntity character2 = usersDAO.findCharacterFromUser(user, NAME_2);
-        assertNotNull(character2);
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setUserName(USERNAME2);
+        usersEntity.setBalance(BALANCE);
+        usersEntity.setFirstName(FIRSTNAME);
+        usersEntity.setLastName(LASTNAME);
+        usersEntity.setIban(IBAN);
+        usersEntity.setCharacterSlots(CHARACTERSLOTS);
+        usersEntity.setMonthsPayed(MONTHSPAYED);
+        usersEntity.setPassword(PASSWORD);
+        usersEntity.setBanned(ISBANNED);
 
-        usersDAO.removeCharacterFromUser(user, character);
-        int amount = usersDAO.getCurrentCharacterAmount(USERNAME);
+        CharactersEntity character = new CharactersEntity();
+        character.setName(NAME_3);
+        character.setClazz(CLASS_3);
+        character.setLevel(LEVEL_3);
+        character.setRace(RACE_3);
+
+        usersDAO.createNewUser(usersEntity);
+
+        usersDAO.loginUser(USERNAME2, PASSWORD);
+        assertTrue(usersDAO.isLoggedIn(USERNAME2));
+
+        usersDAO.addCharacterToUser(usersEntity, character);
+
+        UsersEntity user = usersDAO.findUser(USERNAME2);
+        assertNotNull(user);
+
+        int amount = usersDAO.getCurrentCharacterAmount(USERNAME2);
         assertEquals(1, amount);
 
-        usersDAO.removeCharacterFromUser(user, character2);
-        amount = usersDAO.getCurrentCharacterAmount(USERNAME);
+        character = usersDAO.findCharacterFromUser(user, NAME_3);
+        assertNotNull(character);
+
+        usersDAO.removeCharacterFromUser(user, character);
+
+        amount = usersDAO.getCurrentCharacterAmount(USERNAME2);
         assertEquals(0, amount);
     }
 

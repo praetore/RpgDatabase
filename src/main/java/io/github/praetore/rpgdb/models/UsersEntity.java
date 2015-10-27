@@ -36,7 +36,6 @@ public class UsersEntity {
     @JoinTable(name = "owns",
             joinColumns = @JoinColumn(name="user_name_users"),
             inverseJoinColumns = @JoinColumn(name = "name_characters"))
-    @OrderColumn(name="level")
     public List<CharactersEntity> getCharacters() {
         return characters;
     }
