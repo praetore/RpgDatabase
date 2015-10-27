@@ -116,7 +116,7 @@ public class UsersDAO extends DataAccessObject {
         return 0;
     }
 
-    public void removeUser(UsersEntity user) {
+    private void removeUser(UsersEntity user) {
         EntityTransaction transaction = getEntityManager().getTransaction();
         try {
             transaction.begin();
@@ -137,7 +137,7 @@ public class UsersDAO extends DataAccessObject {
 
     public void updateBalance(String userName, int amount) {
         Boolean authorized = isLoggedIn(userName);
-        boolean canUpdateBalance = sufficientBalance(userName, amount);
+        boolean canUpdateBalance = sufficientBalanceLeft(userName, amount);
         if (authorized && canUpdateBalance) {
             UsersEntity user = findUser(userName);
             EntityTransaction transaction = getEntityManager().getTransaction();
@@ -151,14 +151,14 @@ public class UsersDAO extends DataAccessObject {
         }
     }
 
-    public boolean sufficientBalance(String userName, int amount) {
+    public boolean sufficientBalanceLeft(String userName, int amount) {
         return findUser(userName).getBalance() + amount >= 0;
     }
 
     public void updateSubscription(String userName, Subscription subscription) {
         Boolean authorized = isLoggedIn(userName);
         int amount = subscription.getCost();
-        boolean canUpdateBalance = sufficientBalance(userName, -amount);
+        boolean canUpdateBalance = sufficientBalanceLeft(userName, -amount);
 
         if (authorized && canUpdateBalance) {
             EntityTransaction transaction = getEntityManager().getTransaction();
