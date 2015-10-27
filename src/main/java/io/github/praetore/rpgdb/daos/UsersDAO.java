@@ -48,7 +48,11 @@ public class UsersDAO extends DataAccessObject {
         }
     }
 
-    private boolean isLoggedIn(String userName) {
+    public boolean isLoggedIn(String userName) {
+        Boolean exist = this.loggedIn.get(userName);
+        if (exist == null) {
+            this.loggedIn.put(userName, false);
+        }
         return this.loggedIn.get(userName);
     }
 

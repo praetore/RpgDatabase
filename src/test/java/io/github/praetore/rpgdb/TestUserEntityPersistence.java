@@ -19,6 +19,7 @@ public class TestUserEntityPersistence {
     private static final String PERSISTENCE_UNIT_NAME = "rpgUnit";
 
     private static final String USERNAME = "Praetore";
+    private static final String USERNAME2 = "Emperor";
     private static final int BALANCE = 100;
     private static final String FIRSTNAME = "Darryl";
     private static final String LASTNAME = "Amatsetam";
@@ -77,7 +78,7 @@ public class TestUserEntityPersistence {
     @Test
     public void TestUserRemoval() {
         UsersEntity entity = new UsersEntity();
-        entity.setUserName(USERNAME);
+        entity.setUserName(USERNAME2);
         entity.setBalance(BALANCE);
         entity.setFirstName(FIRSTNAME);
         entity.setLastName(LASTNAME);
@@ -88,11 +89,14 @@ public class TestUserEntityPersistence {
         entity.setBanned(ISBANNED);
 
         usersDAO.createNewUser(entity);
-        UsersEntity user = usersDAO.findUser(USERNAME);
+        UsersEntity user = usersDAO.findUser(USERNAME2);
         assertNotNull(user);
 
-        usersDAO.removeUser(USERNAME);
-        user = usersDAO.findUser(USERNAME);
+        usersDAO.loginUser(USERNAME2, PASSWORD);
+        assertTrue(usersDAO.isLoggedIn(USERNAME2));
+
+        usersDAO.removeUser(USERNAME2);
+        user = usersDAO.findUser(USERNAME2);
         assertNull(user);
     }
 
