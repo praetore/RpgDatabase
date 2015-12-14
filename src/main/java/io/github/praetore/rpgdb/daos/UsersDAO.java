@@ -151,6 +151,32 @@ public class UsersDAO extends DataAccessObject {
         }
     }
 
+    public void updateAvailableSlots(String userName, int slotUpdate) {
+        Boolean authorized = isLoggedIn(userName);
+        int slotPrice = 1;
+        int totalPrice = slotUpdate * slotPrice;
+        boolean sufficient = sufficientBalanceLeft(userName, -1 * totalPrice);
+        if (sufficient && authorized) {
+            EntityTransaction transaction = getEntityManager().getTransaction();
+            try {
+                transaction.begin();
+                UsersEntity user = findUser(userName);
+
+                DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDate dNow = LocalDate.now();
+                String dNowF = df.format(dNow);
+                Timestamp lastPaymentDate = Timestamp.valueOf(dNowF);
+
+                user.setLastPayment(lastPaymentDate);
+                user.setBalance(user.getBalance() - totalPrice);
+                user.setCharacterSlots((short) (user.getCharacterSlots() + slotUpdate));
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+            }
+        }
+    }
+
     public boolean sufficientBalanceLeft(String userName, int amount) {
         return findUser(userName).getBalance() + amount >= 0;
     }
@@ -176,6 +202,7 @@ public class UsersDAO extends DataAccessObject {
                 user.setLastPayment(tsNow);
                 user.setBalance(user.getBalance() - amount);
                 user.setMonthsPayed((short) (user.getMonthsPayed() + monthsAdd));
+                user.setCharacterSlots((short) (user.getCharacterSlots() + 5));
                 transaction.commit();
             } catch (Exception e) {
                 transaction.rollback();
